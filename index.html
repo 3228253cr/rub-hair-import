@@ -1,0 +1,1779 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מערכת ניהול יבוא שיער לפאות</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 3px solid #667eea;
+            overflow-x: auto;
+        }
+
+        .nav-tab {
+            padding: 20px 30px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 16px;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .nav-tab:hover {
+            background: #e9ecef;
+            color: #667eea;
+        }
+
+        .nav-tab.active {
+            background: white;
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+            margin-bottom: -3px;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border: 2px solid #e9ecef;
+        }
+
+        .form-section h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 14px;
+        }
+
+        input, select, textarea {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        button {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: right;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-start;
+        }
+
+        .action-buttons button {
+            padding: 8px 15px;
+            font-size: 14px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .stat-card h4 {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .stat-card .value {
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .order-items {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .order-item-row {
+            display: grid;
+            grid-template-columns: 2fr 2fr 1fr 1fr 1fr auto;
+            gap: 15px;
+            align-items: end;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .total-section {
+            background: #667eea;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .total-row.grand-total {
+            font-size: 1.8em;
+            font-weight: bold;
+            border-top: 2px solid white;
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+
+        .invoice-preview {
+            background: white;
+            padding: 40px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .invoice-header {
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .invoice-header h2 {
+            color: #667eea;
+            font-size: 2em;
+        }
+
+        .search-box {
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+        }
+
+        .debt-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .debt-badge.paid {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .debt-badge.unpaid {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .debt-badge.partial {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .nav-tabs, button, .action-buttons {
+                display: none !important;
+            }
+            .container {
+                box-shadow: none;
+            }
+        }
+
+        .login-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .login-container {
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            max-width: 450px;
+            width: 90%;
+            animation: slideDown 0.5s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .login-header h1 {
+            font-size: 4em;
+            margin-bottom: 10px;
+        }
+
+        .login-header h2 {
+            color: #667eea;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .login-header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .login-form .form-group {
+            margin-bottom: 25px;
+        }
+
+        .login-form input {
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+        }
+
+        .login-form label {
+            font-size: 16px;
+            color: #333;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 15px;
+        }
+
+        .close-modal {
+            font-size: 2em;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+
+        .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-container">
+            <div class="login-header">
+                <h1>🎀</h1>
+                <h2>מערכת ניהול יבוא שיער</h2>
+                <p>נא להזין פרטי התחברות</p>
+            </div>
+            <form onsubmit="return login(event)" class="login-form">
+                <div class="form-group">
+                    <label>שם משתמש</label>
+                    <input type="text" id="loginUsername" required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label>סיסמה</label>
+                    <input type="password" id="loginPassword" required autocomplete="current-password">
+                </div>
+                <div id="loginError" class="alert alert-danger" style="display: none;"></div>
+                <button type="submit" style="width: 100%; padding: 15px; font-size: 18px;">
+                    🔐 כניסה למערכת
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="container" id="mainApp" style="display: none;">
+        <div class="header">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="flex: 1;"></div>
+                <div style="flex: 2; text-align: center;">
+                    <h1>🎀 מערכת ניהול יבוא שיער לפאות</h1>
+                    <p>ניהול מלא של ספקים, מוצרים, הזמנות ולקוחות</p>
+                </div>
+                <div style="flex: 1; text-align: left;">
+                    <button onclick="logout()" style="background: rgba(255,255,255,0.2); border: 2px solid white; padding: 10px 20px; font-size: 14px;">
+                        🚪 התנתק
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="switchTab('dashboard')">📊 לוח בקרה</button>
+            <button class="nav-tab" onclick="switchTab('suppliers')">👥 ספקים</button>
+            <button class="nav-tab" onclick="switchTab('products')">📦 מוצרים</button>
+            <button class="nav-tab" onclick="switchTab('purchases')">🛒 רכישות</button>
+            <button class="nav-tab" onclick="switchTab('customers')">👤 לקוחות</button>
+            <button class="nav-tab" onclick="switchTab('orders')">📝 הזמנות</button>
+            <button class="nav-tab" onclick="switchTab('reports')">📈 דוחות וחובות</button>
+        </div>
+
+        <div class="content">
+            <!-- Dashboard Tab -->
+            <div id="dashboard" class="tab-content active">
+                <h2 style="margin-bottom: 30px; color: #667eea;">לוח בקרה</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h4>סה"כ ספקים</h4>
+                        <div class="value" id="totalSuppliers">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>סה"כ מוצרים</h4>
+                        <div class="value" id="totalProducts">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>סה"כ לקוחות</h4>
+                        <div class="value" id="totalCustomers">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>סה"כ הזמנות</h4>
+                        <div class="value" id="totalOrders">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>חובות פתוחים</h4>
+                        <div class="value" id="totalDebts">₪0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Suppliers Tab -->
+            <div id="suppliers" class="tab-content">
+                <h2 style="margin-bottom: 30px; color: #667eea;">ניהול ספקים</h2>
+                
+                <div class="form-section">
+                    <h3>הוספת ספק חדש</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>שם הספק *</label>
+                            <input type="text" id="supplierName" required>
+                        </div>
+                        <div class="form-group">
+                            <label>טלפון</label>
+                            <input type="tel" id="supplierPhone">
+                        </div>
+                        <div class="form-group">
+                            <label>אימייל</label>
+                            <input type="email" id="supplierEmail">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>כתובת</label>
+                            <input type="text" id="supplierAddress">
+                        </div>
+                        <div class="form-group">
+                            <label>הערות</label>
+                            <textarea id="supplierNotes" rows="2"></textarea>
+                        </div>
+                    </div>
+                    <button onclick="addSupplier()">➕ הוסף ספק</button>
+                </div>
+
+                <h3 style="margin-top: 30px; margin-bottom: 15px;">רשימת ספקים</h3>
+                <table id="suppliersTable">
+                    <thead>
+                        <tr>
+                            <th>קוד</th>
+                            <th>שם ספק</th>
+                            <th>טלפון</th>
+                            <th>אימייל</th>
+                            <th>כתובת</th>
+                            <th>פעולות</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <!-- Products Tab -->
+            <div id="products" class="tab-content">
+                <h2 style="margin-bottom: 30px; color: #667eea;">ניהול מוצרים</h2>
+                
+                <div class="form-section">
+                    <h3>הוספת מוצר חדש</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>שם המוצר *</label>
+                            <input type="text" id="productName" required>
+                        </div>
+                        <div class="form-group">
+                            <label>צבע *</label>
+                            <input type="text" id="productColor" required>
+                        </div>
+                        <div class="form-group">
+                            <label>איכות *</label>
+                            <select id="productQuality" required>
+                                <option value="">בחר איכות</option>
+                                <option value="רגילה">רגילה</option>
+                                <option value="טובה">טובה</option>
+                                <option value="מעולה">מעולה</option>
+                                <option value="פרימיום">פרימיום</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>מחיר מכירה (₪) *</label>
+                            <input type="number" id="productPrice" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label>הערות</label>
+                            <textarea id="productNotes" rows="2"></textarea>
+                        </div>
+                    </div>
+                    <button onclick="addProduct()">➕ הוסף מוצר</button>
+                </div>
+
+                <h3 style="margin-top: 30px; margin-bottom: 15px;">רשימת מוצרים</h3>
+                <table id="productsTable">
+                    <thead>
+                        <tr>
+                            <th>קוד מוצר</th>
+                            <th>שם מוצר</th>
+                            <th>צבע</th>
+                            <th>איכות</th>
+                            <th>מחיר</th>
+                            <th>פעולות</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <!-- Purchases Tab -->
+            <div id="purchases" class="tab-content">
+                <h2 style="margin-bottom: 30px; color: #667eea;">ניהול רכישות</h2>
+                
+                <div class="form-section">
+                    <h3>רכישה חדשה</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>ספק *</label>
+                            <select id="purchaseSupplier" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label>מוצר *</label>
+                            <select id="purchaseProduct" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label>תאריך רכישה *</label>
+                            <input type="date" id="purchaseDate" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>כמות *</label>
+                            <input type="number" id="purchaseQuantity" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label>מחיר ליחידה (₪) *</label>
+                            <input type="number" id="purchasePrice" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label>סה"כ</label>
+                            <input type="number" id="purchaseTotal" step="0.01" readonly>
+                        </div>
+                    </div>
+                    <button onclick="addPurchase()">➕ הוסף רכישה</button>
+                </div>
+
+                <h3 style="margin-top: 30px; margin-bottom: 15px;">היסטוריית רכישות</h3>
+                <table id="purchasesTable">
+                    <thead>
+                        <tr>
+                            <th>מספר</th>
+                            <th>תאריך</th>
+                            <th>ספק</th>
+                            <th>מוצר</th>
+                            <th>כמות</th>
+                            <th>מחיר ליח'</th>
+                            <th>סה"כ</th>
+                            <th>פעולות</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <!-- Customers Tab -->
+            <div id="customers" class="tab-content">
+                <h2 style="margin-bottom: 30px; color: #667eea;">ניהול לקוחות</h2>
+                
+                <div class="form-section">
+                    <h3>הוספת לקוח חדש</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>שם הלקוח *</label>
+                            <input type="text" id="customerName" required>
+                        </div>
+                        <div class="form-group">
+                            <label>טלפון *</label>
+                            <input type="tel" id="customerPhone" required>
+                        </div>
+                        <div class="form-group">
+                            <label>אימייל</label>
+                            <input type="email" id="customerEmail">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>כתובת</label>
+                            <input type="text" id="customerAddress">
+                        </div>
+                        <div class="form-group">
+                            <label>הערות</label>
+                            <textarea id="customerNotes" rows="2"></textarea>
+                        </div>
+                    </div>
+                    <button onclick="addCustomer()">➕ הוסף לקוח</button>
+                </div>
+
+                <h3 style="margin-top: 30px; margin-bottom: 15px;">רשימת לקוחות</h3>
+                <table id="customersTable">
+                    <thead>
+                        <tr>
+                            <th>קוד</th>
+                            <th>שם לקוח</th>
+                            <th>טלפון</th>
+                            <th>אימייל</th>
+                            <th>כתובת</th>
+                            <th>יתרת חוב</th>
+                            <th>פעולות</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <!-- Orders Tab -->
+            <div id="orders" class="tab-content">
+                <h2 style="margin-bottom: 30px; color: #667eea;">ניהול הזמנות</h2>
+                
+                <div class="form-section">
+                    <h3>הזמנה חדשה</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>לקוח *</label>
+                            <select id="orderCustomer" required onchange="updateCustomerDebt()"></select>
+                        </div>
+                        <div class="form-group">
+                            <label>תאריך הזמנה *</label>
+                            <input type="date" id="orderDate" required>
+                        </div>
+                    </div>
+                    <div id="customerDebtAlert" style="display: none;" class="alert alert-danger"></div>
+
+                    <div class="order-items">
+                        <h4 style="margin-bottom: 20px;">פריטי ההזמנה</h4>
+                        <div id="orderItemsContainer"></div>
+                        <button onclick="addOrderItem()" class="btn-secondary">➕ הוסף פריט</button>
+                    </div>
+
+                    <div class="total-section">
+                        <div class="total-row">
+                            <span>סה"כ פריטים:</span>
+                            <span id="orderItemsCount">0</span>
+                        </div>
+                        <div class="total-row grand-total">
+                            <span>סה"כ לתשלום:</span>
+                            <span id="orderGrandTotal">₪0.00</span>
+                        </div>
+                        <div class="form-group" style="margin-top: 20px;">
+                            <label style="color: white;">אמצעי תשלום *</label>
+                            <select id="orderPaymentMethod" required style="font-size: 16px; padding: 15px;">
+                                <option value="">בחר אמצעי תשלום</option>
+                                <option value="מזומן">מזומן</option>
+                                <option value="אשראי">אשראי</option>
+                                <option value="לא שולם">לא שולם</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 15px; margin-top: 20px;">
+                        <button onclick="saveOrder()">💾 שמור הזמנה</button>
+                        <button onclick="clearOrderForm()" class="btn-secondary">🔄 נקה טופס</button>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 30px; margin-bottom: 15px;">רשימת הזמנות</h3>
+                <table id="ordersTable">
+                    <thead>
+                        <tr>
+                            <th>מס' הזמנה</th>
+                            <th>תאריך</th>
+                            <th>לקוח</th>
+                            <th>סה"כ</th>
+                            <th>אמצעי תשלום</th>
+                            <th>סטטוס</th>
+                            <th>פעולות</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <!-- Reports Tab -->
+            <div id="reports" class="tab-content">
+                <h2 style="margin-bottom: 30px; color: #667eea;">דוחות וחובות</h2>
+                
+                <div class="form-section">
+                    <h3>כרטסת לקוח</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>בחר לקוח</label>
+                            <select id="reportCustomer" onchange="showCustomerReport()"></select>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="customerReportContainer"></div>
+
+                <div class="form-section" style="margin-top: 30px;">
+                    <h3>דוח חובות כללי</h3>
+                    <button onclick="showDebtsReport()" class="btn-warning">📊 הצג דוח חובות</button>
+                </div>
+
+                <div id="debtsReportContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Invoice Modal -->
+    <div id="invoiceModal" class="modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h2>חשבונית</h2>
+                <span class="close-modal" onclick="closeInvoiceModal()">×</span>
+            </div>
+            <div id="invoiceContent"></div>
+            <div style="display: flex; gap: 15px; margin-top: 20px;">
+                <button onclick="printInvoice()">🖨️ הדפס</button>
+                <button onclick="closeInvoiceModal()" class="btn-secondary">סגור</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Login credentials
+        const CREDENTIALS = {
+            username: 'yossi',
+            password: '1234'  // ניתן לשנות את הסיסמה כאן
+        };
+
+        // Check if user is logged in on page load
+        window.onload = function() {
+            const isLoggedIn = sessionStorage.getItem('isLoggedIn');
+            if (isLoggedIn === 'true') {
+                showMainApp();
+            }
+        };
+
+        // Login function
+        function login(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const errorDiv = document.getElementById('loginError');
+
+            if (username === CREDENTIALS.username && password === CREDENTIALS.password) {
+                sessionStorage.setItem('isLoggedIn', 'true');
+                errorDiv.style.display = 'none';
+                showMainApp();
+            } else {
+                errorDiv.textContent = '❌ שם משתמש או סיסמה שגויים';
+                errorDiv.style.display = 'block';
+                document.getElementById('loginPassword').value = '';
+            }
+            
+            return false;
+        }
+
+        // Show main application
+        function showMainApp() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'block';
+            loadData();
+            updateDashboard();
+            populateDropdowns();
+            displayAllTables();
+            setDefaultDate();
+        }
+
+        // Logout function
+        function logout() {
+            if (confirm('האם אתה בטוח שברצונך להתנתק?')) {
+                sessionStorage.removeItem('isLoggedIn');
+                document.getElementById('mainApp').style.display = 'none';
+                document.getElementById('loginScreen').style.display = 'flex';
+                document.getElementById('loginUsername').value = '';
+                document.getElementById('loginPassword').value = '';
+            }
+        }
+
+        // Initialize data storage
+        let data = {
+            suppliers: [],
+            products: [],
+            purchases: [],
+            customers: [],
+            orders: []
+        };
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('hairImportData', JSON.stringify(data));
+        }
+
+        // Load data from localStorage
+        function loadData() {
+            const saved = localStorage.getItem('hairImportData');
+            if (saved) {
+                data = JSON.parse(saved);
+            }
+        }
+
+        // Set default date to today
+        function setDefaultDate() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('purchaseDate').value = today;
+            document.getElementById('orderDate').value = today;
+        }
+
+        // Switch between tabs
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            // Remove active class from all nav tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            // Add active class to clicked nav tab
+            event.target.classList.add('active');
+        }
+
+        // Update dashboard statistics
+        function updateDashboard() {
+            document.getElementById('totalSuppliers').textContent = data.suppliers.length;
+            document.getElementById('totalProducts').textContent = data.products.length;
+            document.getElementById('totalCustomers').textContent = data.customers.length;
+            document.getElementById('totalOrders').textContent = data.orders.length;
+            
+            // Calculate total debts
+            let totalDebts = 0;
+            data.orders.forEach(order => {
+                if (order.paymentMethod === 'לא שולם') {
+                    totalDebts += order.total;
+                }
+            });
+            document.getElementById('totalDebts').textContent = '₪' + totalDebts.toFixed(2);
+        }
+
+        // Populate all dropdown menus
+        function populateDropdowns() {
+            // Populate suppliers dropdown
+            const supplierSelects = [
+                document.getElementById('purchaseSupplier')
+            ];
+            supplierSelects.forEach(select => {
+                select.innerHTML = '<option value="">בחר ספק</option>';
+                data.suppliers.forEach(supplier => {
+                    select.innerHTML += `<option value="${supplier.id}">${supplier.name}</option>`;
+                });
+            });
+
+            // Populate products dropdown
+            const productSelects = [
+                document.getElementById('purchaseProduct')
+            ];
+            productSelects.forEach(select => {
+                select.innerHTML = '<option value="">בחר מוצר</option>';
+                data.products.forEach(product => {
+                    select.innerHTML += `<option value="${product.id}">${product.name} - ${product.color} (${product.quality})</option>`;
+                });
+            });
+
+            // Populate customers dropdown
+            const customerSelects = [
+                document.getElementById('orderCustomer'),
+                document.getElementById('reportCustomer')
+            ];
+            customerSelects.forEach(select => {
+                select.innerHTML = '<option value="">בחר לקוח</option>';
+                data.customers.forEach(customer => {
+                    select.innerHTML += `<option value="${customer.id}">${customer.name}</option>`;
+                });
+            });
+        }
+
+        // SUPPLIERS FUNCTIONS
+        function addSupplier() {
+            const name = document.getElementById('supplierName').value.trim();
+            if (!name) {
+                alert('נא להזין שם ספק');
+                return;
+            }
+
+            const supplier = {
+                id: Date.now(),
+                name: name,
+                phone: document.getElementById('supplierPhone').value.trim(),
+                email: document.getElementById('supplierEmail').value.trim(),
+                address: document.getElementById('supplierAddress').value.trim(),
+                notes: document.getElementById('supplierNotes').value.trim()
+            };
+
+            data.suppliers.push(supplier);
+            saveData();
+            displaySuppliersTable();
+            populateDropdowns();
+            updateDashboard();
+            clearSupplierForm();
+            alert('✅ הספק נוסף בהצלחה!');
+        }
+
+        function clearSupplierForm() {
+            document.getElementById('supplierName').value = '';
+            document.getElementById('supplierPhone').value = '';
+            document.getElementById('supplierEmail').value = '';
+            document.getElementById('supplierAddress').value = '';
+            document.getElementById('supplierNotes').value = '';
+        }
+
+        function displaySuppliersTable() {
+            const tbody = document.querySelector('#suppliersTable tbody');
+            tbody.innerHTML = '';
+            
+            data.suppliers.forEach(supplier => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${supplier.id}</td>
+                        <td>${supplier.name}</td>
+                        <td>${supplier.phone || '-'}</td>
+                        <td>${supplier.email || '-'}</td>
+                        <td>${supplier.address || '-'}</td>
+                        <td class="action-buttons">
+                            <button onclick="deleteSupplier(${supplier.id})" class="btn-danger">🗑️ מחק</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function deleteSupplier(id) {
+            if (confirm('האם אתה בטוח שברצונך למחוק ספק זה?')) {
+                data.suppliers = data.suppliers.filter(s => s.id !== id);
+                saveData();
+                displaySuppliersTable();
+                populateDropdowns();
+                updateDashboard();
+            }
+        }
+
+        // PRODUCTS FUNCTIONS
+        function addProduct() {
+            const name = document.getElementById('productName').value.trim();
+            const color = document.getElementById('productColor').value.trim();
+            const quality = document.getElementById('productQuality').value;
+            const price = parseFloat(document.getElementById('productPrice').value);
+
+            if (!name || !color || !quality || !price) {
+                alert('נא למלא את כל השדות החובה');
+                return;
+            }
+
+            const product = {
+                id: Date.now(),
+                name: name,
+                color: color,
+                quality: quality,
+                price: price,
+                notes: document.getElementById('productNotes').value.trim()
+            };
+
+            data.products.push(product);
+            saveData();
+            displayProductsTable();
+            populateDropdowns();
+            updateDashboard();
+            clearProductForm();
+            alert('✅ המוצר נוסף בהצלחה!');
+        }
+
+        function clearProductForm() {
+            document.getElementById('productName').value = '';
+            document.getElementById('productColor').value = '';
+            document.getElementById('productQuality').value = '';
+            document.getElementById('productPrice').value = '';
+            document.getElementById('productNotes').value = '';
+        }
+
+        function displayProductsTable() {
+            const tbody = document.querySelector('#productsTable tbody');
+            tbody.innerHTML = '';
+            
+            data.products.forEach(product => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${product.id}</td>
+                        <td>${product.name}</td>
+                        <td>${product.color}</td>
+                        <td>${product.quality}</td>
+                        <td>₪${product.price.toFixed(2)}</td>
+                        <td class="action-buttons">
+                            <button onclick="deleteProduct(${product.id})" class="btn-danger">🗑️ מחק</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function deleteProduct(id) {
+            if (confirm('האם אתה בטוח שברצונך למחוק מוצר זה?')) {
+                data.products = data.products.filter(p => p.id !== id);
+                saveData();
+                displayProductsTable();
+                populateDropdowns();
+                updateDashboard();
+            }
+        }
+
+        // PURCHASES FUNCTIONS
+        document.getElementById('purchaseQuantity').addEventListener('input', calculatePurchaseTotal);
+        document.getElementById('purchasePrice').addEventListener('input', calculatePurchaseTotal);
+
+        function calculatePurchaseTotal() {
+            const quantity = parseFloat(document.getElementById('purchaseQuantity').value) || 0;
+            const price = parseFloat(document.getElementById('purchasePrice').value) || 0;
+            document.getElementById('purchaseTotal').value = (quantity * price).toFixed(2);
+        }
+
+        function addPurchase() {
+            const supplierId = document.getElementById('purchaseSupplier').value;
+            const productId = document.getElementById('purchaseProduct').value;
+            const date = document.getElementById('purchaseDate').value;
+            const quantity = parseInt(document.getElementById('purchaseQuantity').value);
+            const price = parseFloat(document.getElementById('purchasePrice').value);
+
+            if (!supplierId || !productId || !date || !quantity || !price) {
+                alert('נא למלא את כל השדות');
+                return;
+            }
+
+            const supplier = data.suppliers.find(s => s.id == supplierId);
+            const product = data.products.find(p => p.id == productId);
+
+            const purchase = {
+                id: Date.now(),
+                supplierId: parseInt(supplierId),
+                supplierName: supplier.name,
+                productId: parseInt(productId),
+                productName: product.name + ' - ' + product.color,
+                date: date,
+                quantity: quantity,
+                price: price,
+                total: quantity * price
+            };
+
+            data.purchases.push(purchase);
+            saveData();
+            displayPurchasesTable();
+            clearPurchaseForm();
+            alert('✅ הרכישה נוספה בהצלחה!');
+        }
+
+        function clearPurchaseForm() {
+            document.getElementById('purchaseSupplier').value = '';
+            document.getElementById('purchaseProduct').value = '';
+            document.getElementById('purchaseQuantity').value = '';
+            document.getElementById('purchasePrice').value = '';
+            document.getElementById('purchaseTotal').value = '';
+        }
+
+        function displayPurchasesTable() {
+            const tbody = document.querySelector('#purchasesTable tbody');
+            tbody.innerHTML = '';
+            
+            data.purchases.forEach(purchase => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${purchase.id}</td>
+                        <td>${purchase.date}</td>
+                        <td>${purchase.supplierName}</td>
+                        <td>${purchase.productName}</td>
+                        <td>${purchase.quantity}</td>
+                        <td>₪${purchase.price.toFixed(2)}</td>
+                        <td>₪${purchase.total.toFixed(2)}</td>
+                        <td class="action-buttons">
+                            <button onclick="deletePurchase(${purchase.id})" class="btn-danger">🗑️ מחק</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function deletePurchase(id) {
+            if (confirm('האם אתה בטוח שברצונך למחוק רכישה זו?')) {
+                data.purchases = data.purchases.filter(p => p.id !== id);
+                saveData();
+                displayPurchasesTable();
+            }
+        }
+
+        // CUSTOMERS FUNCTIONS
+        function addCustomer() {
+            const name = document.getElementById('customerName').value.trim();
+            const phone = document.getElementById('customerPhone').value.trim();
+
+            if (!name || !phone) {
+                alert('נא למלא שם ומספר טלפון');
+                return;
+            }
+
+            const customer = {
+                id: Date.now(),
+                name: name,
+                phone: phone,
+                email: document.getElementById('customerEmail').value.trim(),
+                address: document.getElementById('customerAddress').value.trim(),
+                notes: document.getElementById('customerNotes').value.trim()
+            };
+
+            data.customers.push(customer);
+            saveData();
+            displayCustomersTable();
+            populateDropdowns();
+            updateDashboard();
+            clearCustomerForm();
+            alert('✅ הלקוח נוסף בהצלחה!');
+        }
+
+        function clearCustomerForm() {
+            document.getElementById('customerName').value = '';
+            document.getElementById('customerPhone').value = '';
+            document.getElementById('customerEmail').value = '';
+            document.getElementById('customerAddress').value = '';
+            document.getElementById('customerNotes').value = '';
+        }
+
+        function displayCustomersTable() {
+            const tbody = document.querySelector('#customersTable tbody');
+            tbody.innerHTML = '';
+            
+            data.customers.forEach(customer => {
+                const debt = calculateCustomerDebt(customer.id);
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${customer.id}</td>
+                        <td>${customer.name}</td>
+                        <td>${customer.phone}</td>
+                        <td>${customer.email || '-'}</td>
+                        <td>${customer.address || '-'}</td>
+                        <td style="font-weight: bold; color: ${debt > 0 ? '#dc3545' : '#28a745'};">₪${debt.toFixed(2)}</td>
+                        <td class="action-buttons">
+                            <button onclick="deleteCustomer(${customer.id})" class="btn-danger">🗑️ מחק</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function deleteCustomer(id) {
+            if (confirm('האם אתה בטוח שברצונך למחוק לקוח זה?')) {
+                data.customers = data.customers.filter(c => c.id !== id);
+                saveData();
+                displayCustomersTable();
+                populateDropdowns();
+                updateDashboard();
+            }
+        }
+
+        function calculateCustomerDebt(customerId) {
+            let debt = 0;
+            data.orders.forEach(order => {
+                if (order.customerId == customerId && order.paymentMethod === 'לא שולם') {
+                    debt += order.total;
+                }
+            });
+            return debt;
+        }
+
+        // ORDERS FUNCTIONS
+        let orderItemsCount = 0;
+
+        function addOrderItem() {
+            orderItemsCount++;
+            const container = document.getElementById('orderItemsContainer');
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'order-item-row';
+            itemDiv.id = `orderItem${orderItemsCount}`;
+            itemDiv.innerHTML = `
+                <div class="form-group">
+                    <label>מוצר</label>
+                    <select class="item-product" onchange="updateItemPrice(${orderItemsCount})">
+                        <option value="">בחר מוצר</option>
+                        ${data.products.map(p => `<option value="${p.id}" data-price="${p.price}">${p.name} - ${p.color} (${p.quality})</option>`).join('')}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>שם מוצר</label>
+                    <input type="text" class="item-name" readonly>
+                </div>
+                <div class="form-group">
+                    <label>מחיר</label>
+                    <input type="number" class="item-price" step="0.01" onchange="calculateItemTotal(${orderItemsCount})">
+                </div>
+                <div class="form-group">
+                    <label>כמות</label>
+                    <input type="number" class="item-quantity" min="1" value="1" onchange="calculateItemTotal(${orderItemsCount})">
+                </div>
+                <div class="form-group">
+                    <label>סה"כ</label>
+                    <input type="number" class="item-total" step="0.01" readonly>
+                </div>
+                <div class="form-group">
+                    <button type="button" onclick="removeOrderItem(${orderItemsCount})" class="btn-danger">🗑️</button>
+                </div>
+            `;
+            container.appendChild(itemDiv);
+        }
+
+        function updateItemPrice(itemId) {
+            const itemDiv = document.getElementById(`orderItem${itemId}`);
+            const select = itemDiv.querySelector('.item-product');
+            const selectedOption = select.options[select.selectedIndex];
+            const price = selectedOption.getAttribute('data-price');
+            const productName = selectedOption.text;
+            
+            itemDiv.querySelector('.item-price').value = price || '';
+            itemDiv.querySelector('.item-name').value = productName !== 'בחר מוצר' ? productName : '';
+            calculateItemTotal(itemId);
+        }
+
+        function calculateItemTotal(itemId) {
+            const itemDiv = document.getElementById(`orderItem${itemId}`);
+            const price = parseFloat(itemDiv.querySelector('.item-price').value) || 0;
+            const quantity = parseInt(itemDiv.querySelector('.item-quantity').value) || 0;
+            itemDiv.querySelector('.item-total').value = (price * quantity).toFixed(2);
+            calculateOrderTotal();
+        }
+
+        function removeOrderItem(itemId) {
+            const itemDiv = document.getElementById(`orderItem${itemId}`);
+            itemDiv.remove();
+            calculateOrderTotal();
+        }
+
+        function calculateOrderTotal() {
+            let total = 0;
+            let count = 0;
+            document.querySelectorAll('.order-item-row').forEach(row => {
+                const itemTotal = parseFloat(row.querySelector('.item-total').value) || 0;
+                total += itemTotal;
+                count++;
+            });
+            document.getElementById('orderItemsCount').textContent = count;
+            document.getElementById('orderGrandTotal').textContent = '₪' + total.toFixed(2);
+        }
+
+        function updateCustomerDebt() {
+            const customerId = document.getElementById('orderCustomer').value;
+            if (!customerId) {
+                document.getElementById('customerDebtAlert').style.display = 'none';
+                return;
+            }
+            
+            const debt = calculateCustomerDebt(customerId);
+            const alertDiv = document.getElementById('customerDebtAlert');
+            
+            if (debt > 0) {
+                alertDiv.textContent = `⚠️ ללקוח זה חוב פתוח בסך: ₪${debt.toFixed(2)}`;
+                alertDiv.style.display = 'block';
+            } else {
+                alertDiv.style.display = 'none';
+            }
+        }
+
+        function saveOrder() {
+            const customerId = document.getElementById('orderCustomer').value;
+            const date = document.getElementById('orderDate').value;
+            const paymentMethod = document.getElementById('orderPaymentMethod').value;
+
+            if (!customerId || !date || !paymentMethod) {
+                alert('נא למלא את כל השדות החובה');
+                return;
+            }
+
+            const items = [];
+            let valid = true;
+
+            document.querySelectorAll('.order-item-row').forEach(row => {
+                const productSelect = row.querySelector('.item-product');
+                const productId = productSelect.value;
+                const productName = row.querySelector('.item-name').value;
+                const price = parseFloat(row.querySelector('.item-price').value);
+                const quantity = parseInt(row.querySelector('.item-quantity').value);
+                const total = parseFloat(row.querySelector('.item-total').value);
+
+                if (!productId || !quantity || !price) {
+                    valid = false;
+                    return;
+                }
+
+                items.push({
+                    productId: parseInt(productId),
+                    productName: productName,
+                    price: price,
+                    quantity: quantity,
+                    total: total
+                });
+            });
+
+            if (!valid || items.length === 0) {
+                alert('נא למלא את כל פריטי ההזמנה');
+                return;
+            }
+
+            const customer = data.customers.find(c => c.id == customerId);
+            const orderTotal = items.reduce((sum, item) => sum + item.total, 0);
+
+            const order = {
+                id: Date.now(),
+                customerId: parseInt(customerId),
+                customerName: customer.name,
+                date: date,
+                items: items,
+                total: orderTotal,
+                paymentMethod: paymentMethod
+            };
+
+            data.orders.push(order);
+            saveData();
+            displayOrdersTable();
+            displayCustomersTable();
+            updateDashboard();
+            clearOrderForm();
+            alert('✅ ההזמנה נשמרה בהצלחה!');
+        }
+
+        function clearOrderForm() {
+            document.getElementById('orderCustomer').value = '';
+            document.getElementById('orderDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('orderPaymentMethod').value = '';
+            document.getElementById('orderItemsContainer').innerHTML = '';
+            document.getElementById('customerDebtAlert').style.display = 'none';
+            orderItemsCount = 0;
+            calculateOrderTotal();
+        }
+
+        function displayOrdersTable() {
+            const tbody = document.querySelector('#ordersTable tbody');
+            tbody.innerHTML = '';
+            
+            data.orders.forEach(order => {
+                const statusBadge = order.paymentMethod === 'לא שולם' ? 
+                    '<span class="debt-badge unpaid">לא שולם</span>' : 
+                    '<span class="debt-badge paid">שולם</span>';
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${order.id}</td>
+                        <td>${order.date}</td>
+                        <td>${order.customerName}</td>
+                        <td>₪${order.total.toFixed(2)}</td>
+                        <td>${order.paymentMethod}</td>
+                        <td>${statusBadge}</td>
+                        <td class="action-buttons">
+                            <button onclick="showInvoice(${order.id})" class="btn-success">📄 חשבונית</button>
+                            <button onclick="deleteOrder(${order.id})" class="btn-danger">🗑️ מחק</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function deleteOrder(id) {
+            if (confirm('האם אתה בטוח שברצונך למחוק הזמנה זו?')) {
+                data.orders = data.orders.filter(o => o.id !== id);
+                saveData();
+                displayOrdersTable();
+                displayCustomersTable();
+                updateDashboard();
+            }
+        }
+
+        // INVOICE FUNCTIONS
+        function showInvoice(orderId) {
+            const order = data.orders.find(o => o.id === orderId);
+            if (!order) return;
+
+            const customer = data.customers.find(c => c.id === order.customerId);
+            
+            let itemsHTML = '';
+            order.items.forEach((item, index) => {
+                itemsHTML += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${item.productName}</td>
+                        <td>${item.quantity}</td>
+                        <td>₪${item.price.toFixed(2)}</td>
+                        <td>₪${item.total.toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+
+            const invoiceHTML = `
+                <div class="invoice-preview">
+                    <div class="invoice-header">
+                        <h2>חשבונית מס' ${order.id}</h2>
+                        <p>תאריך: ${order.date}</p>
+                    </div>
+                    
+                    <div style="margin-bottom: 30px;">
+                        <h3 style="color: #667eea; margin-bottom: 10px;">פרטי לקוח:</h3>
+                        <p><strong>שם:</strong> ${customer.name}</p>
+                        <p><strong>טלפון:</strong> ${customer.phone}</p>
+                        ${customer.address ? `<p><strong>כתובת:</strong> ${customer.address}</p>` : ''}
+                    </div>
+
+                    <table style="margin-bottom: 20px;">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>תיאור</th>
+                                <th>כמות</th>
+                                <th>מחיר יחידה</th>
+                                <th>סה"כ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${itemsHTML}
+                        </tbody>
+                    </table>
+
+                    <div style="background: #667eea; color: white; padding: 20px; border-radius: 10px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <strong>סה"כ לתשלום:</strong>
+                            <strong style="font-size: 1.5em;">₪${order.total.toFixed(2)}</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <strong>אמצעי תשלום:</strong>
+                            <strong>${order.paymentMethod}</strong>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('invoiceContent').innerHTML = invoiceHTML;
+            document.getElementById('invoiceModal').classList.add('active');
+        }
+
+        function closeInvoiceModal() {
+            document.getElementById('invoiceModal').classList.remove('active');
+        }
+
+        function printInvoice() {
+            window.print();
+        }
+
+        // REPORTS FUNCTIONS
+        function showCustomerReport() {
+            const customerId = document.getElementById('reportCustomer').value;
+            if (!customerId) {
+                document.getElementById('customerReportContainer').innerHTML = '';
+                return;
+            }
+
+            const customer = data.customers.find(c => c.id == customerId);
+            const customerOrders = data.orders.filter(o => o.customerId == customerId);
+
+            let totalOrders = 0;
+            let totalPaid = 0;
+            let totalUnpaid = 0;
+
+            let ordersHTML = '';
+            customerOrders.forEach(order => {
+                totalOrders += order.total;
+                if (order.paymentMethod === 'לא שולם') {
+                    totalUnpaid += order.total;
+                } else {
+                    totalPaid += order.total;
+                }
+
+                const statusBadge = order.paymentMethod === 'לא שולם' ? 
+                    '<span class="debt-badge unpaid">לא שולם</span>' : 
+                    '<span class="debt-badge paid">שולם</span>';
+
+                ordersHTML += `
+                    <tr>
+                        <td>${order.id}</td>
+                        <td>${order.date}</td>
+                        <td>${order.items.length}</td>
+                        <td>₪${order.total.toFixed(2)}</td>
+                        <td>${statusBadge}</td>
+                        <td class="action-buttons">
+                            <button onclick="showInvoice(${order.id})" class="btn-success">📄 חשבונית</button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            const reportHTML = `
+                <div class="form-section">
+                    <h3>כרטסת לקוח: ${customer.name}</h3>
+                    
+                    <div class="stats-grid" style="margin-top: 20px;">
+                        <div class="stat-card">
+                            <h4>סה"כ הזמנות</h4>
+                            <div class="value">${customerOrders.length}</div>
+                        </div>
+                        <div class="stat-card">
+                            <h4>סה"כ שולם</h4>
+                            <div class="value">₪${totalPaid.toFixed(2)}</div>
+                        </div>
+                        <div class="stat-card">
+                            <h4>חוב פתוח</h4>
+                            <div class="value">₪${totalUnpaid.toFixed(2)}</div>
+                        </div>
+                        <div class="stat-card">
+                            <h4>סה"כ כסף</h4>
+                            <div class="value">₪${totalOrders.toFixed(2)}</div>
+                        </div>
+                    </div>
+
+                    <h4 style="margin-top: 30px; margin-bottom: 15px;">היסטוריית הזמנות</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>מס' הזמנה</th>
+                                <th>תאריך</th>
+                                <th>כמות פריטים</th>
+                                <th>סה"כ</th>
+                                <th>סטטוס תשלום</th>
+                                <th>פעולות</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${ordersHTML || '<tr><td colspan="6" style="text-align: center;">לא נמצאו הזמנות</td></tr>'}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            document.getElementById('customerReportContainer').innerHTML = reportHTML;
+        }
+
+        function showDebtsReport() {
+            const debts = [];
+            
+            data.customers.forEach(customer => {
+                const customerOrders = data.orders.filter(o => 
+                    o.customerId === customer.id && o.paymentMethod === 'לא שולם'
+                );
+                
+                if (customerOrders.length > 0) {
+                    const totalDebt = customerOrders.reduce((sum, order) => sum + order.total, 0);
+                    debts.push({
+                        customer: customer,
+                        orders: customerOrders,
+                        totalDebt: totalDebt
+                    });
+                }
+            });
+
+            let debtsHTML = '';
+            debts.forEach(debt => {
+                let ordersDetails = '';
+                debt.orders.forEach(order => {
+                    ordersDetails += `
+                        <tr>
+                            <td>${order.id}</td>
+                            <td>${order.date}</td>
+                            <td>₪${order.total.toFixed(2)}</td>
+                        </tr>
+                    `;
+                });
+
+                debtsHTML += `
+                    <div class="form-section">
+                        <h4 style="color: #dc3545;">לקוח: ${debt.customer.name}</h4>
+                        <p><strong>טלפון:</strong> ${debt.customer.phone}</p>
+                        <p><strong>סה"כ חוב:</strong> <span style="color: #dc3545; font-size: 1.3em; font-weight: bold;">₪${debt.totalDebt.toFixed(2)}</span></p>
+                        
+                        <table style="margin-top: 15px;">
+                            <thead>
+                                <tr>
+                                    <th>מס' הזמנה</th>
+                                    <th>תאריך</th>
+                                    <th>סכום</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${ordersDetails}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            });
+
+            const totalDebts = debts.reduce((sum, debt) => sum + debt.totalDebt, 0);
+
+            const reportHTML = `
+                <div style="margin-top: 30px;">
+                    <div class="stat-card" style="max-width: 400px; margin-bottom: 30px;">
+                        <h4>סה"כ חובות פתוחים</h4>
+                        <div class="value">₪${totalDebts.toFixed(2)}</div>
+                        <p style="margin-top: 10px; opacity: 0.9;">מתוך ${debts.length} לקוחות</p>
+                    </div>
+
+                    ${debtsHTML || '<div class="alert alert-success">אין חובות פתוחים! 🎉</div>'}
+                </div>
+            `;
+
+            document.getElementById('debtsReportContainer').innerHTML = reportHTML;
+        }
+
+        // Display all tables on page load
+        function displayAllTables() {
+            displaySuppliersTable();
+            displayProductsTable();
+            displayPurchasesTable();
+            displayCustomersTable();
+            displayOrdersTable();
+        }
+
+        // Initialize first order item
+        addOrderItem();
+    </script>
+</body>
+</html>
